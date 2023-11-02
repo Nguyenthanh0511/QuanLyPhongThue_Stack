@@ -1,5 +1,6 @@
 #include<iostream> 
 #include<fstream> 
+#include <string>
 using namespace std;
 
 struct PhongKhachSan{
@@ -181,6 +182,8 @@ PhongKhachSan TimKiemTraVePhong(stack s, PhongKhachSan phong) {
 	stack temp = s;
 	if(isEmpty(temp)) {
 		cout<<"Khong co phong!" ;
+		PhongKhachSan phongRong = {0, "", 0};
+		return phongRong; 
 	}
 	else{
 		PhongKhachSan kiemTraPhong;
@@ -192,11 +195,67 @@ PhongKhachSan TimKiemTraVePhong(stack s, PhongKhachSan phong) {
 		}
 	} 
 }
+
 //y tuong xay dung tang khach san , moi tang co 4 phong 
 //vi du tim kiem tang 1 co phong ma id la 134 hay khong 
 // y tuong xay dung code la , moi tang se tuong ung voi 1 stack , vi du stack tang1 , stack tang2 ...
 // cach duyet cac stack la cu goi tang do len  
-
+PhongKhachSan PopTang(stack s[],int tang) {
+	if(isEmpty(s[tang])) {
+		cout<<"Khong co phong!!" ;
+		PhongKhachSan phongRong = {0, "", 0};
+		return phongRong; 
+	}
+	else{
+		PhongKhachSan KS = s[tang].top->dataKs;
+		Node *temp =s[tang].top;
+		s[tang].top = s[tang].top->next;
+		delete temp;
+		return KS; 
+	} 
+}
+//Dien thong tin phong cho moi tang 
+void DienThongTinPhong(stack s[],int tang) 
+{
+//	stack sTang[10] ;
+	PhongKhachSan KS;
+	for(int i = 0;i<tang;i++) {
+		Init(s[i]) ;
+		cout<<"\nTang thu ["<<i+1<<" ]"<<endl; 	
+		int j = 0;
+		do{
+		if(j<2){
+			
+			cout<<"Nhap vao id khach san ["<<j+1<<" ]";
+			cin>>KS.id;
+			cout<<"Nhap ten khach san ["<<j+1<<" ]";
+			cin>>KS.name;
+			cout<<"Gia phong thue ["<<j+1<<" ]";
+			cin>>KS.giaThue;	
+			Push(s[i],KS);
+		}
+		else{
+			break;
+		}
+		j++;
+	}while(true) ;
+	}
+	
+}
+//in thong tin tang va phong 
+void print(stack s[],int tang) {
+//	stack temp = s; 
+	for(int i = 0 ;i<tang;i++) {
+		stack temp = s[i] ;
+		while(!isEmpty(temp)) {
+			PhongKhachSan KS = Pop(temp);
+			cout<<KS.id<<"\t"<<KS.name<<"\t"<<KS.giaThue;
+			cout<<endl;
+	//		Push(s,KS);
+		}	
+	}
+	
+}
 int main() {
  	stack s;
     Init(s);
@@ -251,12 +310,16 @@ int main() {
 	}
 //	cout<<"\nGhi Tep !\n" ;
 //	ghiTep(s);
+
+	//xay dung so tang cho khach san 
+	stack sTang[10] ;
 	
-	
-	
-	
-	
-	
+	int tang;
+	cout<<"\nNhap so tang khach san va moi tang toi da la 4 phong :"; 
+	cin>>tang;  
+	DienThongTinPhong(sTang,tang);
+	cout<<"\nIn thong tin \nID \t\t Ten phong \t\t Gia thue\n";
+	print(sTang,tang);
 	
 	
 	
