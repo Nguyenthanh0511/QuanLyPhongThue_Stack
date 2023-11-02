@@ -54,6 +54,7 @@ void print(stack &s) {
 		PhongKhachSan KS = Pop(temp);
 		cout<<KS.id<<"\t"<<KS.name<<"\t"<<KS.giaThue;
 		cout<<endl;
+//		Push(s,KS);
 	}
 }
 void Push(stack &s,PhongKhachSan KS){
@@ -79,84 +80,9 @@ void input(stack &s,int n) {
 			break;
 		}
 		i++;
-		
 	}while(true);
 }
 //
-//ghi vao tep 
-void ghiTep(stack &s) {
-	ifstream f1; 
-	int soLuong;
-	PhongKhachSan KS;
-	f1.open("QuanLyPhong.text");
-	if(!f1)  {
-		cout<<"Loi mo tep !" ;
-		return; 
-	}
-	f1>>soLuong;
-	for(int i = 0 ;i<soLuong;i++) {
-		f1>>KS.id;
-		f1>>KS.name;
-		f1>>KS.giaThue;
-		Push(s,KS) ;
-	}
-	f1.close() ;
-}
-//Ham so sanh cac id giong nhau 
-
-//Pop
-PhongKhachSan Pop(stack &s){
-	if(isEmpty(s)){
-		cout<<"Khong co phong !";
-	}
-	else{
-		PhongKhachSan KS = s.top->dataKs;
-		Node *temp = s.top; 
-		s.top = s.top->next;
-		delete temp; 
-		return KS; 
-	}
-}
-//Xoa phong co gia tien trong khoang tu 3tr den 5tr den so phong le 
-void HienPhongTuAdenB(stack &s,float giaPhongBatDau ,float giaPhongKetThuc){
-	stack temp;
-	while(!isEmpty(s)){
-		PhongKhachSan KS = Pop(s);
-		if(KS.giaThue > giaPhongBatDau&&KS.giaThue<giaPhongKetThuc){
-			Push(temp,KS);
-		}
-	}
-	while(!isEmpty(temp)){
-		PhongKhachSan KS = Pop(temp);
-		cout<<KS.id<<"\t"<<KS.name<<"\t"<<KS.giaThue;
-		cout<<endl;
-	}
-}
-//kiem tra phong tra ve so thu tu phong 
-int TimKiem(stack s , PhongKhachSan KS) {
-	int ketQua = 0;
-	if(s.top==NULL) {
-		ketQua = -1; 
-	}
-	else{
-		PhongKhachSan kiemTra; 
-		while(!isEmpty(s)) {
-			kiemTra = Pop(s) ;
-			if(kiemTra.id==KS.id) {
-				ketQua = 1;
-				break; 
-			}
-		}
-	}
-	return ketQua; 
-}
-
-//y tuong xay dung tang khach san , moi tang co 4 phong 
-//vi du tim kiem tang 1 co phong ma id la 134 hay khong 
-// y tuong xay dung code la , moi tang se tuong ung voi 1 stack , vi du stack tang1 , stack tang2 ...
-// cach duyet cac stack la cu goi tang do len  
-
-
 //doc thong tin tu tep len man hinh terminal 
 void docTep(stack &s) {
 	ifstream f1; 
@@ -198,25 +124,130 @@ void ghiTep(stack &s,int soLuong) {
 }
 //Ham so sanh cac id giong nhau 
 
+//Pop
+PhongKhachSan Pop(stack &s){
+	if(isEmpty(s)){
+		cout<<"Khong co phong !";
+	}
+	else{
+		PhongKhachSan KS = s.top->dataKs;
+//		neu minh xoa di thi  
+		Node *temp = s.top; 
+		s.top = s.top->next;
+//		delete temp; 
+		return KS; 
+	}
+}
+//Xoa phong co gia tien trong khoang tu 3tr den 5tr den so phong le 
+void HienPhongTuAdenB(stack &s,float giaPhongBatDau ,float giaPhongKetThuc){
+	stack temp;
+	stack hienTai = s; 
+	while(!isEmpty(hienTai)){
+		PhongKhachSan KS = Pop(hienTai);
+		if(KS.giaThue > giaPhongBatDau&&KS.giaThue<giaPhongKetThuc){
+			Push(temp,KS);
+		}
+	}
+	while(!isEmpty(temp)){
+		PhongKhachSan KS = Pop(temp);
+		//tra ve s 
+	
+		cout<<KS.id<<"\t"<<KS.name<<"\t"<<KS.giaThue;
+		cout<<endl;	
+//		Push(s,KS); 
+	}
+}
+//kiem tra phong tra ve so thu tu phong 
+int TimKiem(stack s , PhongKhachSan phong) {
+	int ketQua = 0;
+	stack temp = s; 
+	if(isEmpty(temp)) {
+		ketQua = -1; 
+	}
+	else{
+		PhongKhachSan kiemTra; 
+		while(!isEmpty(s)) {
+			kiemTra = Pop(s) ;
+			if(kiemTra.id==phong.id) {
+				ketQua = 1;
+				break; 
+			}
+		}
+	}
+	return ketQua; 
+}
+//tim kiem tra ve ten phong 
+PhongKhachSan TimKiemTraVePhong(stack s, PhongKhachSan phong) {
+	stack temp = s;
+	if(isEmpty(temp)) {
+		cout<<"Khong co phong!" ;
+	}
+	else{
+		PhongKhachSan kiemTraPhong;
+		while(!isEmpty(temp) ) {
+			kiemTraPhong = Pop(s);
+			if(kiemTraPhong.id==phong.id) {
+				return kiemTraPhong; 
+			}
+		}
+	} 
+}
+//y tuong xay dung tang khach san , moi tang co 4 phong 
+//vi du tim kiem tang 1 co phong ma id la 134 hay khong 
+// y tuong xay dung code la , moi tang se tuong ung voi 1 stack , vi du stack tang1 , stack tang2 ...
+// cach duyet cac stack la cu goi tang do len  
+
 int main() {
  	stack s;
     Init(s);
-  	int n;
-	cin>>n; 
-	input(s,n);
-	ghiTep(s,n);
-
-	//timKiem
-//	PhongKhachSan timKiemPhong; 
-//	cout<<"\nNhap id phong muon tim kiem :";
-//	cin>>timKiemPhong.id; 
-//	int ketQua = TimKiem(s,phong)  ;
-//	if(ketQua==-1){
-//		cout<<"\nKhong tim thay phong\n" ;
-//	}
-//	else{
-//		cout<<"Tim thay phong co id :"<<timKiemPhong.id<<"\nTen phong : "<<timKiemPhong.name<<endl; 
-//	} 
+  	PhongKhachSan phong1 = {1, "Phong 101", 1100};
+    PhongKhachSan phong2 = {2, "Phong 102", 150};
+    PhongKhachSan phong3 = {3, "Phong 103", 3900};
+    PhongKhachSan phong4 = {4, "Phong 104", 1300};
+    PhongKhachSan phong5 = {5, "Phong 105", 40.0};
+ 	PhongKhachSan phong6 = {6, "Phong 106", 4500};
+    PhongKhachSan phong7 = {7, "Phong 107", 28.0};	
+    // T? ð?ng thêm m?u 5 ph?ng vào danh sách ð?t
+    Push(s, phong1);
+    Push(s, phong2);
+    Push(s, phong3);
+    Push(s, phong4);
+    Push(s, phong5);
+    Push(s, phong6);
+    Push(s, phong7);
+    print(s);
+    PhongKhachSan phong;
+////	input(s,2);
+//	cout<<"\nKhoang tu A den B\n" ;
+//	HienPhongTuAdenB(s,1000,3000);
+//	cout<<"\n\tHien phong \n" ;
+//	
+//	
+//	print(s) ; // bay gio no se hien ca 2 phong  
+//	int n;
+//	cin>>n; 
+//	input(s,n);
+//	ghiTep(s,n);
+//	
+//	timKiem tra ve so nguyenn  
+	PhongKhachSan timKiemPhong; 
+	cout<<"\nNhap id phong muon tim kiem :";
+	cin>>timKiemPhong.id; 
+	int ketQua = TimKiem(s,timKiemPhong)  ;
+	if(ketQua==-1||ketQua == 0){
+		cout<<"\nKhong tim thay phong\n" ;
+	}
+	else{
+		cout<<"Tim thay phong co id :"<<timKiemPhong.id<<"\t"<<timKiemPhong.name<<"\t"<<timKiemPhong.giaThue; 
+	}
+	// tim kiem tra ve kieu struct 
+	PhongKhachSan kiemTraPhongStruct = TimKiemTraVePhong(s,phong);
+	if(kiemTraPhongStruct.id==timKiemPhong.id){
+		cout<<"Tim thay phong co id :"<<timKiemPhong.id<<"\t"<<timKiemPhong.name<<"\t"<<timKiemPhong.giaThue; 
+	}
+	else{
+		cout<<"\nKhong tim thay phong\n" ;	
+	}
 //	cout<<"\nGhi Tep !\n" ;
 //	ghiTep(s);
 	
