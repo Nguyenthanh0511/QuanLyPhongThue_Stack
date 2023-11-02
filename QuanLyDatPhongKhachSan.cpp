@@ -156,6 +156,48 @@ int TimKiem(stack s , PhongKhachSan KS) {
 // y tuong xay dung code la , moi tang se tuong ung voi 1 stack , vi du stack tang1 , stack tang2 ...
 // cach duyet cac stack la cu goi tang do len  
 
+
+//doc thong tin tu tep len man hinh terminal 
+void docTep(stack &s) {
+	ifstream f1; 
+	int soLuong;
+	PhongKhachSan KS;
+	f1.open("QuanLyPhong.text");
+	if(!f1)  {
+		cout<<"Loi mo tep !" ;
+		return; 
+	}
+	f1>>soLuong;
+	for(int i = 0 ;i<soLuong;i++) {
+		f1>>KS.id;
+		f1>>KS.name;
+		f1>>KS.giaThue;
+		Push(s,KS) ;
+	}
+	f1.close() ;
+}
+//ghi thong tin vao tep 
+void ghiTep(stack &s,int soLuong) {
+	ofstream f1;
+    PhongKhachSan KS;
+    f1.open("QuanLyPhong.txt");
+    if (!f1) {
+        cout << "Loi mo tep !" ;
+        return;
+    }
+    stack temp = s;
+	f1<<"So Luong phong :"<<soLuong<<endl;
+	f1<<"\nThong tin\n" ;
+	f1<<"id\t\tTen\t\tGia Thue"<<endl;
+	while(!isEmpty(temp)) {
+		KS = Pop(temp) ;
+		f1 << KS.id << "\t\t" << KS.name << "\t\t" << KS.giaThue << endl;
+	}
+	cout<<"\nGhi thanh cong\n"; 
+	f1.close()   ;
+}
+//Ham so sanh cac id giong nhau 
+
 int main() {
  	stack s;
     Init(s);
