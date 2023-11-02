@@ -1,0 +1,10 @@
+3
+111
+Iphone
+1000
+222
+Samsung
+500
+333
+Xiaomi
+100
