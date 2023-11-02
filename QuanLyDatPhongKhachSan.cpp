@@ -201,26 +201,11 @@ void ghiTep(stack &s,int soLuong) {
 int main() {
  	stack s;
     Init(s);
-  	PhongKhachSan phong1 = {1, "Phong 101", 1100};
-    PhongKhachSan phong2 = {2, "Phong 102", 150};
-    PhongKhachSan phong3 = {3, "Phong 103", 3900};
-    PhongKhachSan phong4 = {4, "Phong 104", 1300};
-    PhongKhachSan phong5 = {5, "Phong 105", 40.0};
- 	PhongKhachSan phong6 = {6, "Phong 106", 4500};
-    PhongKhachSan phong7 = {7, "Phong 107", 28.0};	
-    // T? ð?ng thêm m?u 5 ph?ng vào danh sách ð?t
-    Push(s, phong1);
-    Push(s, phong2);
-    Push(s, phong3);
-    Push(s, phong4);
-    Push(s, phong5);
-    Push(s, phong6);
-    Push(s, phong7);
-    print(s);
-    PhongKhachSan phong;
-//	input(s,2);
-	cout<<"\nKhoang tu A den B\n" ;
-	HienPhongTuAdenB(s,1000,3000);
+  	int n;
+	cin>>n; 
+	input(s,n);
+	ghiTep(s,n);
+
 	//timKiem
 //	PhongKhachSan timKiemPhong; 
 //	cout<<"\nNhap id phong muon tim kiem :";
