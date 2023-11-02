@@ -229,6 +229,7 @@ int main() {
 //	input(s,n);
 //	ghiTep(s,n);
 //	
+
 //	timKiem tra ve so nguyenn  
 	PhongKhachSan timKiemPhong; 
 	cout<<"\nNhap id phong muon tim kiem :";
@@ -238,12 +239,12 @@ int main() {
 		cout<<"\nKhong tim thay phong\n" ;
 	}
 	else{
-		cout<<"Tim thay phong co id :"<<timKiemPhong.id<<"\t"<<timKiemPhong.name<<"\t"<<timKiemPhong.giaThue; 
+		cout<<"Tim thay phong co id :"<<timKiemPhong.id;
 	}
 	// tim kiem tra ve kieu struct 
-	PhongKhachSan kiemTraPhongStruct = TimKiemTraVePhong(s,phong);
-	if(kiemTraPhongStruct.id==timKiemPhong.id){
-		cout<<"Tim thay phong co id :"<<timKiemPhong.id<<"\t"<<timKiemPhong.name<<"\t"<<timKiemPhong.giaThue; 
+	PhongKhachSan kiemTraPhongStruct = TimKiemTraVePhong(s,timKiemPhong);
+	if(kiemTraPhongStruct.id != 0){
+		cout<<"\nTim thay phong co id :"<<kiemTraPhongStruct.id<<"\t"<<kiemTraPhongStruct.name<<"\t"<<kiemTraPhongStruct.giaThue; 
 	}
 	else{
 		cout<<"\nKhong tim thay phong\n" ;	
