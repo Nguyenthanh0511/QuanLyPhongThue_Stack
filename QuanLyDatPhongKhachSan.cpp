@@ -1,3 +1,4 @@
+//sourctree 
 #include<iostream> 
 #include<fstream> 
 #include <string>
@@ -41,6 +42,7 @@ int len(stack s) {
 	}
 	return dem; 
 }
+//Tao node 
 Node *MakeNode(stack S,PhongKhachSan KS)
 {
 	Node *p = new Node;
@@ -61,29 +63,51 @@ void print(stack &s) {
 void Push(stack &s,PhongKhachSan KS){
 	Node *p = new Node;
 	p = MakeNode(s,KS);
-	p->next = s.top;
+//	p->next = s.top;
 	s.top = p;
 }
-void input(stack &s,int n) {
-	PhongKhachSan KS;
-	int i = 0;
-	do{
-		if(i<n){
-			cout<<"Nhap vao id khach san :";
-			cin>>KS.id;
-			cout<<"Nhap ten khach san :";
-			cin>>KS.name;
-			cout<<"Gia phong thue :";
-			cin>>KS.giaThue;	
-			Push(s,KS);
-		}
-		if(i==n){
-			break;
-		}
-		i++;
-	}while(true);
+// Thêm vào cuối
+void insertLast(stack &s,PhongKhachSan KS){
+	Node *p = new Node;
+	if(isEmpty(s)){
+		cout<<"Stack rong !";
+		return;
+	}
+	while(s.top!=NULL){
+		s.top = s.top->next;
+	}
+	s.top = p;
 }
-//
+void NhapPhong(stack& s) {
+    int soPhong = 2; // Số lượng phòng tối đa 2 phòng cho mỗi tầng
+    for (int i = 0; i < soPhong; i++) {
+        PhongKhachSan phong;
+        cout << "Nhap thong tin cho phong " << (i + 1) << endl;
+        cout << "Nhap ID: ";
+        cin >> phong.id;
+        cout << "Nhap ten phong: ";
+        cin.ignore();
+        getline(cin, phong.name);
+        cout << "Nhap gia thue: ";
+        cin >> phong.giaThue;
+        // Kiểm tra ID trùng lặp trong tầng hiện tại
+        bool trungLap = false;
+        stack temp = s;
+        while (!isEmpty(temp)) {
+            PhongKhachSan Ks = Pop(temp);
+            if (phong.id == Ks.id) {
+                trungLap = true;
+                cout << "ID da ton tai trong tang nay. Vui long nhap lai." << endl;
+                break;
+            }
+        }
+        if (!trungLap) {
+            Push(s, phong);
+        } else {
+            i--; // Nếu ID trùng lặp, nhập lại cho phòng này
+        }
+    }
+}
 //doc thong tin tu tep len man hinh terminal 
 void docTep(stack &s) {
 	ifstream f1; 
@@ -124,20 +148,37 @@ void ghiTep(stack &s,int soLuong) {
 	f1.close()   ;
 }
 //Ham so sanh cac id giong nhau 
-
+/*Ý tưởng của hàm này như sau :
+Nó sẽ thực hiện việc nhập cho từng stack nếu stack có số tầng thứ i có id nhập vào trùng nhau thì nó sẽ bảo người dùng nhập lại với ô stack đó  */
+void NhapThongTinTang(stack s[] , int tang){
+	for(int i = 0;i<tang;i++){
+		cout<<"Nhap thong tin tang thu "<<i+1 <<" :"<<endl;
+		Init(s[i]);
+		PhongKhachSan phong;
+		NhapPhong(s[i]); // tối đa 2 phòng 1 tầng cho dễ nhập 
+	}
+}
 //Pop
 PhongKhachSan Pop(stack &s){
 	if(isEmpty(s)){
 		cout<<"Khong co phong !";
 	}
-	else{
-		PhongKhachSan KS = s.top->dataKs;
-//		neu minh xoa di thi  
-		Node *temp = s.top; 
-		s.top = s.top->next;
-//		delete temp; 
-		return KS; 
+	PhongKhachSan KS = s.top->dataKs;
+//	neu minh xoa di thi  
+	Node *temp = s.top; 
+	s.top = s.top->next;
+//	delete temp; 
+	return KS; 
+}
+// Lấy phần tử đầu và xóa đi 
+PhongKhachSan delFirst(stack &s){
+	if(isEmpty(s)){
+		cout<<"Khong co phong ";
 	}
+	while(s.top->next!=NULL){
+		s.top = s.top->next;
+	}
+		return Pop(s);
 }
 //Xoa phong co gia tien trong khoang tu 3tr den 5tr den so phong le 
 void HienPhongTuAdenB(stack &s,float giaPhongBatDau ,float giaPhongKetThuc){
@@ -159,43 +200,43 @@ void HienPhongTuAdenB(stack &s,float giaPhongBatDau ,float giaPhongKetThuc){
 	}
 }
 //kiem tra phong tra ve so thu tu phong 
-int TimKiem(stack s , PhongKhachSan phong) {
+int TimKiem(stack &s , PhongKhachSan phong) {
 	int ketQua = 0;
 	stack temp = s; 
 	if(isEmpty(temp)) {
-		ketQua = -1; 
+		ketQua = 0; 
 	}
 	else{
 		PhongKhachSan kiemTra; 
-		while(!isEmpty(s)) {
-			kiemTra = Pop(s) ;
+		while(!isEmpty(temp)) {
+			kiemTra = Pop(temp) ;
 			if(kiemTra.id==phong.id) {
 				ketQua = 1;
-				break; 
 			}
 		}
 	}
 	return ketQua; 
 }
 //tim kiem tra ve ten phong 
-PhongKhachSan TimKiemTraVePhong(stack s, PhongKhachSan phong) {
+PhongKhachSan TimKiemTraVePhong(stack &s, PhongKhachSan phong) {
 	stack temp = s;
+	PhongKhachSan ketQua = {0, "", 0};
 	if(isEmpty(temp)) {
 		cout<<"Khong co phong!" ;
-		PhongKhachSan phongRong = {0, "", 0};
-		return phongRong; 
+		PhongKhachSan phongRong = ketQua;
+		return phongRong;
 	}
 	else{
 		PhongKhachSan kiemTraPhong;
 		while(!isEmpty(temp) ) {
-			kiemTraPhong = Pop(s);
+			kiemTraPhong = Pop(temp);
 			if(kiemTraPhong.id==phong.id) {
-				return kiemTraPhong; 
+				ketQua = kiemTraPhong; 
 			}
 		}
-	} 
+	}
+	return ketQua;
 }
-
 //y tuong xay dung tang khach san , moi tang co 4 phong 
 //vi du tim kiem tang 1 co phong ma id la 134 hay khong 
 // y tuong xay dung code la , moi tang se tuong ung voi 1 stack , vi du stack tang1 , stack tang2 ...
@@ -212,7 +253,7 @@ PhongKhachSan PopTang(stack s[],int tang) {
 		s[tang].top = s[tang].top->next;
 		delete temp;
 		return KS; 
-	} 
+	}
 }
 //Dien thong tin phong cho moi tang 
 void DienThongTinPhong(stack s[],int tang) 
@@ -240,7 +281,6 @@ void DienThongTinPhong(stack s[],int tang)
 		j++;
 	}while(true) ;
 	}
-	
 }
 //in thong tin tang va phong 
 void print(stack s[],int tang) {
@@ -256,6 +296,18 @@ void print(stack s[],int tang) {
 	}
 	
 }
+// 											Sử dụng vector , in ra mà merge code 
+//gop tat ca cac stack tang vao stack khachSan   
+void gopTatCaStack(stack sTang[],stack &merge,int tang) {
+	for(int i = 0 ;i < tang ;i++){
+		while(!isEmpty(sTang[i])){
+			PhongKhachSan mergePhong = Pop(sTang[i]);
+			Push(merge,mergePhong);
+		}
+	}
+}
+
+
 int main() {
  	stack s;
     Init(s);
@@ -266,16 +318,32 @@ int main() {
     PhongKhachSan phong5 = {5, "Phong 105", 40.0};
  	PhongKhachSan phong6 = {6, "Phong 106", 4500};
     PhongKhachSan phong7 = {7, "Phong 107", 28.0};	
-    // T? �?ng th�m m?u 5 ph?ng v�o danh s�ch �?t
-    Push(s, phong1);
-    Push(s, phong2);
-    Push(s, phong3);
-    Push(s, phong4);
-    Push(s, phong5);
-    Push(s, phong6);
-    Push(s, phong7);
-    print(s);
-    PhongKhachSan phong;
+    // T? ð?ng thêm m?u 5 ph?ng vào danh sách ð?t
+//    Push(s, phong1);
+//    Push(s, phong2);
+//    Push(s, phong3);
+//    Push(s, phong4);
+//    Push(s, phong5);
+//    Push(s, phong6);
+//    Push(s, phong7);
+//    print(s);
+//    PhongKhachSan phong;
+    stack sTang[5];
+    int tang;
+    cout<<endl<<"Nhap so tang :";
+    cin>>tang;
+    // Xây dưng số tầng 
+//   	for(int i = 0 ;i<tang;i++){
+//		Init(sTang[i]); 
+//		Push(sTang[i],phong1);
+//		Push(sTang[i],phong2);
+//		Push(sTang[i],phong3);
+//		Push(sTang[i],phong4);
+//	} 
+    
+//Nhập thông tin số tầng
+NhapThongTinTang(sTang,tang);
+    
 ////	input(s,2);
 //	cout<<"\nKhoang tu A den B\n" ;
 //	HienPhongTuAdenB(s,1000,3000);
@@ -287,13 +355,18 @@ int main() {
 //	cin>>n; 
 //	input(s,n);
 //	ghiTep(s,n);
-//	
 
+//	 Gộp stack 
+	stack merge;
+	Init(merge);
+	gopTatCaStack(sTang,merge,tang);
+	
+	print(merge);
 //	timKiem tra ve so nguyenn  
 	PhongKhachSan timKiemPhong; 
 	cout<<"\nNhap id phong muon tim kiem :";
-	cin>>timKiemPhong.id; 
-	int ketQua = TimKiem(s,timKiemPhong)  ;
+	cin>>timKiemPhong.id;
+	int ketQua = TimKiem(merge,timKiemPhong)  ;
 	if(ketQua==-1||ketQua == 0){
 		cout<<"\nKhong tim thay phong\n" ;
 	}
@@ -301,7 +374,7 @@ int main() {
 		cout<<"Tim thay phong co id :"<<timKiemPhong.id;
 	}
 	// tim kiem tra ve kieu struct 
-	PhongKhachSan kiemTraPhongStruct = TimKiemTraVePhong(s,timKiemPhong);
+	PhongKhachSan kiemTraPhongStruct = TimKiemTraVePhong(merge,timKiemPhong);
 	if(kiemTraPhongStruct.id != 0){
 		cout<<"\nTim thay phong co id :"<<kiemTraPhongStruct.id<<"\t"<<kiemTraPhongStruct.name<<"\t"<<kiemTraPhongStruct.giaThue; 
 	}
@@ -311,17 +384,17 @@ int main() {
 //	cout<<"\nGhi Tep !\n" ;
 //	ghiTep(s);
 
-	//xay dung so tang cho khach san 
-	stack sTang[10] ;
-	
-	int tang;
-	cout<<"\nNhap so tang khach san va moi tang toi da la 4 phong :"; 
-	cin>>tang;  
-	DienThongTinPhong(sTang,tang);
-	cout<<"\nIn thong tin \nID \t\t Ten phong \t\t Gia thue\n";
-	print(sTang,tang);
-	
-	
+	//xay dung so tang cho khach san , nhap thu cong 
+//	stack sTang[10] ;
+//	
+//	int tang;
+//	cout<<"\nNhap so tang khach san va moi tang toi da la 4 phong :"; 
+//	cin>>tang;  
+//	DienThongTinPhong(sTang,tang);
+//	cout<<"\nIn thong tin \nID \t\t Ten phong \t\t Gia thue\n";
+//	print(sTang,tang);
+//	
+//	
 	
 	
 //    while (true) {
