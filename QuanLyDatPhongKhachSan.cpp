@@ -8,7 +8,7 @@ struct PhongKhachSan{
 	int id;
 	string name;
 	float giaThue; 
-}; 
+};
 struct Node{
 	PhongKhachSan dataKs;
 	Node *next; 
@@ -306,6 +306,332 @@ void gopTatCaStack(stack sTang[],stack &merge,int tang) {
 		}
 	}
 }
+// xoa phong sau do tra ve phong day
+//PhongKhachSan xoaPhong(stack &s,PhongKhachSan phong){
+//	stack bienTam = s;
+//	PhongKhachSan traVe;
+//	// nêu cần xóa ở vị trí đỉnh
+//	if(phong.id==s.top->dataKs.id){
+//		traVe = Pop(s);
+//	}
+//	else{
+//		if(isEmpty(s)){
+//			cout<<"Khong co phong !";
+//		}
+//		PhongKhachSan KS = s.top->dataKs;
+//		Node *temp;
+//		while(s.top->next!=NULL){
+//			if(phong.giaThue!=s.top->dataKs.giaThue){
+//				temp = s.top;
+//				traVe = s.top->dataKs;
+//				break;	
+//			}
+//			s.top = s.top->next;
+//		}
+//		 
+//		temp->next = s.top->next;
+//			
+//	}
+//	return traVe;
+//}
+
+PhongKhachSan xoaPhong(stack &s, PhongKhachSan phong) {
+    stack bienTam;
+    Init(bienTam);
+    PhongKhachSan traVe;
+
+    if (isEmpty(s)) {
+        cout << "Khong co phong!" << endl;
+        return traVe;
+    }
+
+    Node *temp = NULL;
+
+    while (!isEmpty(s)) {
+        if (s.top->dataKs.giaThue == phong.giaThue) {
+            traVe = Pop(s);
+            if (temp != NULL) {
+                temp->next = s.top->next;
+            }
+            break;
+        } else {
+            temp = s.top;
+            Push(bienTam, Pop(s));
+        }
+    }
+
+    while (!isEmpty(bienTam)) {
+        Push(s, Pop(bienTam));
+    }
+
+    return traVe;
+}
+
+// Sắp xếp selection sort 
+// Tim node co phong nho nhat  , tim theo gia phong 
+PhongKhachSan findMinPhong(stack &s){
+	PhongKhachSan phongMin = s.top->dataKs;
+	stack temp;
+	Init(temp);
+	while(!isEmpty(s)){
+		PhongKhachSan KS = Pop(s);
+		if(KS.giaThue<phongMin.giaThue){
+			phongMin = KS;
+			// mục đích push là để trả lại stack cũ 
+			Push(temp,phongMin);
+		}
+		else{
+			Push(temp,phongMin) ;
+		}
+	}
+	while(!isEmpty(temp)){
+		PhongKhachSan phong = Pop(temp);
+		Push(s,phong);
+	}
+	return phongMin;
+}
+// tim min phong su dung node de duyet 
+PhongKhachSan findMin(stack &s) {
+    if (isEmpty(s)) {
+        cout << "Rong !";
+    }
+    Node *current = s.top;
+    PhongKhachSan min = current->dataKs;
+    while (current != NULL) {
+        PhongKhachSan phong = current->dataKs;
+        if (phong.giaThue < min.giaThue) {
+            min = phong;
+        }
+        current = current->next;
+    }
+    return min;
+}
+
+void swapGiaThue(Node *node1, Node *node2) {
+    PhongKhachSan temp = node1->dataKs;
+    node1->dataKs = node2->dataKs;
+    node2->dataKs = temp;
+}
+// xay dung tim min tra ve node
+Node *findMinNode(stack &s){
+	if(isEmpty(s)){
+		cout<<"rong!";
+	}
+	Node *current = s.top;
+	Node *min = current;
+	while(current!=NULL){
+		Node *phong = current;
+		if(phong->dataKs.giaThue < min->dataKs.giaThue){
+			min = phong;	
+		}
+		current = current->next;
+	}
+	return min;
+}
+void swapNodes(stack& s, Node* node1, Node* node2) {
+    // Check if the nodes are already adjacent (i.e., node1->next is node2)
+    if (node1->next == node2) {
+        // Swap the nodes
+        Node* temp = node2->next;
+        node2->next = node1;
+        node1->next = temp;
+
+        // Update the top of the stack if needed
+        if (s.top == node1) {
+            s.top = node2;
+        } else if (s.top == node2) {
+            s.top = node1;
+        }
+    } else if (node2->next == node1) {
+        // Swap the nodes
+        Node* temp = node1->next;
+        node1->next = node2;
+        node2->next = temp;
+
+        // Update the top of the stack if needed
+        if (s.top == node1) {
+            s.top = node2;
+        } else if (s.top == node2) {
+            s.top = node1;
+        }
+    } else {
+        // Nodes are not adjacent, so we need to traverse the list and update the links
+        Node* prev1 = nullptr;
+        Node* prev2 = nullptr;
+        Node* current = s.top;
+
+        // Find the previous nodes of node1 and node2
+        while (current != nullptr && current != node1) {
+            prev1 = current;
+            current = current->next;
+        }
+
+        current = s.top; // Reset the current pointer
+
+        while (current != nullptr && current != node2) {
+            prev2 = current;
+            current = current->next;
+        }
+
+        if (prev1 != nullptr) {
+            prev1->next = node2;
+        } else {
+            s.top = node2;
+        }
+
+        if (prev2 != nullptr) {
+            prev2->next = node1;
+        } else {
+            s.top = node1;
+        }
+
+        Node* temp = node1->next;
+        node1->next = node2->next;
+        node2->next = temp;
+    }
+}
+
+void selectionSortPhongGiaThue(stack &s) {
+    stack sorted; // Stack để lưu trữ các phần tử đã được sắp xếp
+    Init(sorted);
+
+    while (s.top != NULL) {
+        Node *phongMin = new Node;
+        stack Dinh = s;
+        phongMin = findMinNode(Dinh);
+        if (s.top->dataKs.giaThue != phongMin->dataKs.giaThue) {
+            Node *temp = Dinh.top;
+            swapNodes(s,temp, phongMin);
+//            Push(sorted,temp->dataKs);
+        }
+//        lÚC NÀY Nó đã đổi chỗ vị node thứ 
+        // Đẩy phần tử nhỏ nhất vào stack đã sắp xếp
+        Push(sorted,phongMin->dataKs);
+//        // Xóa phần tử nhỏ nhất khỏi stack gốc
+//        Pop(s);
+        s.top = s.top->next;
+    }
+//
+//    // Đưa các phần tử từ stack đã sắp xếp về stack gốc
+//    while (!isEmpty(sorted)) {
+//        Node *temp = sorted.top;
+//        Pop(sorted);
+//        Push(s, temp->dataKs);
+//        sorted.top = sorted.top->next;
+//    }
+	s = sorted;
+}
+// Thuật toán quick sort 
+void QuickSort(stack &s) {
+    if (isEmpty(s)) {
+        return;
+    }
+    stack less, equal, greater;
+    Init(less);
+    Init(equal);
+    Init(greater);
+
+    PhongKhachSan pivot = Pop(s);
+    Push(equal, pivot);
+
+    while (!isEmpty(s)) {
+        PhongKhachSan KS = Pop(s);
+        if (KS.giaThue < pivot.giaThue) {
+            Push(less, KS);
+        } else if (KS.giaThue == pivot.giaThue) {
+            Push(equal, KS);
+        } else {
+            Push(greater, KS);
+        }
+    }
+
+    QuickSort(less);
+    QuickSort(greater);
+
+    while (!isEmpty(less)) {
+        Push(s, Pop(less));
+    }
+    while (!isEmpty(equal)) {
+        Push(s, Pop(equal));
+    }
+    while (!isEmpty(greater)) {
+        Push(s, Pop(greater));
+    }
+}
+
+void insertionSort(stack& s) {
+    stack sortedStack;
+    Init(sortedStack);
+    while (!isEmpty(s)) {
+        PhongKhachSan minPhong = Pop(s);
+        stack tempStack;
+        Init(tempStack);
+        while (!isEmpty(s)) {
+            PhongKhachSan KS = Pop(s);
+            if (KS.giaThue < minPhong.giaThue) {
+                Push(tempStack, minPhong);
+                minPhong = KS;
+            } else {
+                Push(tempStack, KS);
+            }
+        }
+
+        Push(sortedStack, minPhong);
+
+        while (!isEmpty(tempStack)) {
+            Push(s, Pop(tempStack));
+        }
+    }
+
+    while (!isEmpty(sortedStack)) {
+        Push(s, Pop(sortedStack));
+    }
+}
+
+void Merge(stack &s, stack &left, stack &right) {
+    while (!isEmpty(left) && !isEmpty(right)) {
+        if (left.top->dataKs.giaThue <= right.top->dataKs.giaThue) {
+            Push(s, Pop(left));
+        } else {
+            Push(s, Pop(right));
+        }
+    }
+
+    while (!isEmpty(left)) {
+        Push(s, Pop(left));
+    }
+
+    while (!isEmpty(right)) {
+        Push(s, Pop(right));
+    }
+}
+
+void MergeSort(stack &s) {
+    if (len(s) <= 1) {
+        return;
+    }
+
+    stack left, right;
+    Init(left);
+    Init(right);
+
+    int middle = len(s) / 2;
+    int i = 0;
+
+    while (i < middle) {
+        Push(left, Pop(s));
+        i++;
+    }
+
+    while (!isEmpty(s)) {
+        Push(right, Pop(s));
+    }
+
+    MergeSort(left);
+    MergeSort(right);
+
+    Merge(s, left, right);
+}
 
 
 int main() {
@@ -332,17 +658,17 @@ int main() {
     int tang;
     cout<<endl<<"Nhap so tang :";
     cin>>tang;
-    // Xây dưng số tầng 
-//   	for(int i = 0 ;i<tang;i++){
-//		Init(sTang[i]); 
-//		Push(sTang[i],phong1);
-//		Push(sTang[i],phong2);
-//		Push(sTang[i],phong3);
-//		Push(sTang[i],phong4);
-//	} 
+//     Xây dưng số tầng 
+   	for(int i = 0 ;i<tang;i++){
+		Init(sTang[i]); 
+		Push(sTang[i],phong1);
+		Push(sTang[i],phong2);
+		Push(sTang[i],phong3);
+		Push(sTang[i],phong4);
+	} 
     
 //Nhập thông tin số tầng
-NhapThongTinTang(sTang,tang);
+//NhapThongTinTang(sTang,tang);
     
 ////	input(s,2);
 //	cout<<"\nKhoang tu A den B\n" ;
@@ -360,7 +686,26 @@ NhapThongTinTang(sTang,tang);
 	stack merge;
 	Init(merge);
 	gopTatCaStack(sTang,merge,tang);
+	print(merge);
 	
+	// xoa phong sau do tra ve phong
+//	PhongKhachSan xoaPhongKS = xoaPhong(merge,phong1);
+//	cout<<"\n Phong vua xoa :"<<xoaPhongKS.name<<endl;
+	print(merge);
+	//Tìm giá phòng nhỏ nhất
+	PhongKhachSan giaThueRe = findMin(merge);
+	cout<<"Gia phong nho nhat id :"<<giaThueRe.id<<"\t"<<giaThueRe.giaThue;
+// Sắp xếp theo giá thuê phongf
+	cout<<"\nSap xep \n";
+	Node *node1 = new Node;
+	Node *node2 = new Node;
+	node1->dataKs = phong1;
+	node2->dataKs = phong3;
+//	swapGiaThue(node1,node2);
+//	insertionSort(merge);
+	selectionSortPhongGiaThue(merge);
+//	QuickSort(merge);
+//	Merge
 	print(merge);
 //	timKiem tra ve so nguyenn  
 	PhongKhachSan timKiemPhong; 
