@@ -248,7 +248,6 @@ void HienPhongTuAdenB(stack &s,float giaPhongBatDau ,float giaPhongKetThuc){
 	while(!isEmpty(temp)){
 		PhongKhachSan KS = Pop(temp);
 		//tra ve s 
-	
 		cout<<KS.id<<"\t"<<KS.name<<"\t"<<KS.giaThue;
 		cout<<endl;	
 //		Push(s,KS); 

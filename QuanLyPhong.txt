@@ -1,7 +1,11 @@
+3
 2
-4
-So tung thu :1
-41	phong123	98989
-So tung thu :2
-43	8iphong	12
-2	phong2	899
+1,phong1,10
+2,phong2,12
+2
+3,phong3,15
+4,phong4,13
+2
+5,phong,20
+6,phong,30
+

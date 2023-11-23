@@ -1,31 +1,12 @@
-Nhap so tang :5
 
-Tang thu 1
-4       Phong 104       1300
-3       Phong 103       3900
-2       Phong 102       150
-1       Phong 101       1100
+3
+2
+1,phong1,10.0
+2,phong2,12.0
+2
+3,phong3,15.0
+4,phong4,13.0
+2
+5,phong,20.0
+6,phong,30.0
 
-Tang thu 2
-4       Phong 104       1300
-3       Phong 103       3900
-2       Phong 102       150
-1       Phong 101       1100
-
-Tang thu 3
-4       Phong 104       1300
-3       Phong 103       3900
-2       Phong 102       150
-1       Phong 101       1100
-
-Tang thu 4
-4       Phong 104       1300
-3       Phong 103       3900
-2       Phong 102       150
-1       Phong 101       1100
-
-Tang thu 5
-4       Phong 104       1300
-3       Phong 103       3900
-2       Phong 102       150
-1       Phong 101       1100
