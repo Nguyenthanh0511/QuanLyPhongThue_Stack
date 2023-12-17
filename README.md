@@ -1,4 +1,6 @@
 # QuanLyPhongThue_Stack
+Cấu trúc stack file chính là main.cpp
+
 Đây là CTDL và Thuật toán , mình đang làm về CTDL và GIải thuật , cấu trúc Stack
 
 Chủ đề về quản lý đặt phòng khách sạn là sẽ chia các phòng có các thuộc tính của đối tượng phòng . Các thuộc tính này gồm có mã phòng , tên phòng , giá phòng .
